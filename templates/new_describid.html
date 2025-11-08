@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Describid
+{% endblock %}
+
+{% block main %}
+    <h1>Create my Describid</h1>
+    <div class="card" id="word-card" style="min-height: 100px; width: 18rem;">
+        <div class="card-body" style="display: flex; align-items: center; justify-content: center;">
+            <h4 id="display">{{ keyword }}</h4>
+        </div>
+    </div>
+    <form method="post" class="d-flex flex-column align-items-center gap-3">
+        <button class="btn btn-primary" name="action" value="generate" id="generate-word">Generate new keyword (-1@)</button>
+        <button class="btn btn-info">?</button>
+        <button class="btn btn-primary" name="action" value="submit">Post my Describid</button>
+    </form>
+
+    <!-- must link javascript file-->
+     <script src="/static/new_word_logic.js"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    {% if session["user_id"] %}
+    <!-- Main Content Area -->
+        <h1>Welcome to your profile</h1>
+        <div class="panels-container">
+            <!-- Left Panel -->
+            <div class="left-panel-container">
+                <div class="panel left-panel">
+                    <h3>My Describid</h3>
+                    <!-- Content for left panel goes here -->
+                    {% for my_describid in my_describids %}
+                        <div class="card play-card {{ 'play-card-desc' if my_describid.status == 'describable' else '' }}">
+                            <div class="card-body">
+                                <h5>{{ my_describid.keyword }}</h5>
+                                <h6>{{ my_describid.status }}</h6>
+                                <p id="play-id" hidden>play id: {{ my_describid.id }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            
+                <div class="panel right-panel">
+                    <!-- Content for right panel goes here -->
+                    {% for active_play in active_plays %}
+                        <div class="card play-card">
+                            <div class="card-body">
+                                <h5>By: {{ active_play.owner_username }}</h5>
+                                <h6>You're a {{ active_play.id_role }}</h6>
+                                <p id="play-id">play id: {{ active_play.id }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            
+        </div>
+    {% endif %}
+
+
+{% endblock %}

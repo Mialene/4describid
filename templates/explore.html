@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Explore
+{% endblock %}
+
+{% block main %}
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="forbid-rbtn" autocomplete="off" checked>
+        <label class="btn btn-outline-pink" for="forbid-rbtn">Forbid</label>
+
+        <input type="radio" class="btn-check" name="btnradio" id="guess-rbtn" autocomplete="off">
+        <label class="btn btn-outline-green" for="guess-rbtn">Guess</label>
+    </div>
+
+    <h3 id="explore-header">Forbid Plays</h3>
+
+    <div class="expl-panel-container">
+        <!-- Forbid plays display here -->
+        <div class="expl-panel active" id="forbid-panel">
+            {% for play in forbid_plays %}
+                <div class="card play-card" style="min-height: 150px; width: 18rem;">
+                        <div class="card-body">
+                            <h5>By: {{ play.owner_username }}</h5>
+                            <h6>{{ play.status }}</h6>
+                            <p id="play-id">play id: {{ play.id }}</p>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+        <!-- Guess plays display here -->
+        <div class="expl-panel" id="guess-panel">
+            {% for play in guess_plays %}
+                <div class="card play-card" style="min-height: 150px; width: 18rem;">
+                        <div class="card-body">
+                            <h5>By: {{ play.owner_username }}</h5>
+                            <h6>{{ play.status }}</h6>
+                            <p id="play-id">play id: {{ play.id }}</p>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <tr>
+            <th>Play ID</th>
+            <th>Keyword</th>
+            <th>Describer</th>
+            <th>Correct guesses</th>
+            <th>Incorrect guesses</th>
+            <th>Concluded</th>
+            <th>View</th>
+        </tr>
+
+        {% for play in all_played_plays %}
+            <tr>
+                <td>{{ play.id }}</td>
+                <td>{{ play.keyword }}</td>
+                <td>{{ play.owner_username }}</td>
+                <td>{{ play.correct_guess_count }}</td>
+                <td>{{ play.incorrect_guess_count }}</td>
+                <td>{{ play.end_time }}</td>
+                <td><a href="{{ url_for('play', id=play.id) }}">View</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+{% endblock %}

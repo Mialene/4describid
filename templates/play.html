@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Play
+{% endblock %}
+
+{% block main %}
+    <!-- Play Header Section -->
+    <div>
+        <div class="play-header">
+            <div>Play id: {{ play_id }}</div>
+            <!-- I'll work on concluded later -->
+                {% if not viewed and status == 'guessable' %}
+                    <div class="keyword-display">
+                        Can you guess the keyword?
+                    </div>
+                {% elif not viewed and status != 'guessable' %}
+                    <!-- no role entering forbiddable -->
+                    <form method="post">
+                        <button name="action" value="view" class="view-button">
+                            View Keyword
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- user decided to 'viewed', show keyword -->
+                    <div class="keyword-display">
+                        {{ keyword }}
+                    </div>
+                {% endif %}
+            <div>By: {{ owner_name }}</div>
+
+            
+        </div>
+    </div>
+
+    <!-- Forbidders Section covering forbidder 1 & 2 -->
+    <div class="forbidders-container" style="max-width: 1000px; margin: 2rem auto;">
+            
+        {% if status == 'forbiddable' and not viewed %} <!-- As long as they have role, the 'viewed' is always true -->
+
+            <!-- show nothing for none viewer and guesser -->
+            {% if forbidder1 %}
+                forbidder1 has submitted.
+            {% endif %}
+
+        {% elif f1_username and role %} <!-- already has forbidder1 -->
+
+        <!-- if guessable, viewers are already filtered out in python-->
+            <div class="forbidder-bar">
+
+                <div class="forbidder-info">
+                    <div class="user-icon">
+                        <svg width="30" height="30" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div style="font-weight: bold;">Forbidder 1</div>
+                    <div style="font-size: 0.9rem; color: #666;">{{ f1_username }}</div>
+                </div>
+
+                <div class="forbidden-bubble">
+                    <div style="display: flex; gap: 1rem;">
+                        {% if fwords_list %}
+                            <div class="word-label">{{ fwords_list[0] }}</div>
+                            <div class="word-label">{{ fwords_list[1] }}</div>
+                            <div class="word-label">{{ fwords_list[2] }}</div>
+                        {% endif %}
+                    </div>
+                </div>  
+            </div>      
+
+        {% endif %}   
+            
+        
+        {% if viewed %} <!-- only role haver are allowed to see and input -->
+            <!-- Forbidder 2 -->
+            <div class="forbidder-bar">
+                <div class="forbidder-info">
+                    <div class="user-icon" style="background-color: #dc143c;">
+                        <svg width="30" height="30" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div style="font-weight: bold;">{{ "Forbidder" if status == 'forbiddable' else "Forbidder 2" }}</div>
+                    <div style="font-size: 0.9rem; color: #666;">{{ f2_username }}</div>
+                </div>
+                
+                <div class="forbidden-bubble" style="background-color: #dc143c;">   
+                    {% if status == 'forbiddable' and role == 'viewer' %}
+                        <!-- need to check concurrent submission -->
+                        <!-- submit my forbidden words -->
+                        <!-- submit success, reduce token -->
+                        <button class="btn btn-warning open-f-prompt">submit my forbidden words now</button>
+
+                        <!-- hidden prompt -->
+                        <div class="modal" id="forbidModal">
+                            <div class="modal-inner">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                                    <div class="word-label">
+                                        Each word must contain at least 3 letters, no special character and not duplicate with other forbidden words
+                                    </div>
+                                    <div>
+                                        <form method="post">
+                                            <input type="text" name="word1" placeholder="Forbidden Word 1" 
+                                                onkeydown="return /[A-Za-z]/.test(event.key) || ['Backspace', 'Delete', 'Tab', 'Enter'].includes(event.key)" 
+                                                minlength="3" required>
+                                            <input type="text" name="word2" placeholder="Forbidden Word 2" 
+                                                onkeydown="return /[A-Za-z]/.test(event.key) || ['Backspace', 'Delete', 'Tab', 'Enter'].includes(event.key)"
+                                                minlength="3" required>
+                                            <input type="text" name="word3" placeholder="Forbidden Word 3" 
+                                                onkeydown="return /[A-Za-z]/.test(event.key) || ['Backspace', 'Delete', 'Tab', 'Enter'].includes(event.key)" 
+                                                minlength="3" required>
+                                            <button class="btn btn-outline-warning" type="submit" name="action" value="submit-fwords">Submit (-@)</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif f2_username and role %} <!-- this will only happen in guessable status, only newcomers aren't allowed to view -->
+                        <div style="display: flex; gap: 1rem;">
+                            {% if fwords_list %}
+                                <div class="word-label">{{ fwords_list[3] }}</div>
+                                <div class="word-label">{{ fwords_list[4] }}</div>
+                                <div class="word-label">{{ fwords_list[5] }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+
+    <!-- Description Section -->
+    {% if status == 'describable' and role == 'describer' %}
+        <button class="btn btn-primary open-d-prompt">Add my description</button>
+
+
+        <div id="descriptionModal" class="modal">
+            <div class="modal-content">
+                <h4>Avoid these forbidden words</h4>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="word-label" id="label0">{{ fwords_list[0] }}</div>
+                    <div class="word-label" id="label1">{{ fwords_list[1] }}</div>
+                    <div class="word-label" id="label2">{{ fwords_list[2] }}</div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="word-label" id="label3">{{ fwords_list[3] }}</div>
+                    <div class="word-label" id="label4">{{ fwords_list[4] }}</div>
+                    <div class="word-label" id="label5">{{ fwords_list[5] }}</div>
+                </div>
+                
+                <p>Provide description for <strong>{{ keyword }}</strong> within 40 characters, alphabets only.</p>
+
+                <form class="text-form" method="post">
+                    <textarea name="description" id="description" rows="3" cols="12" placeholder="Enter your description here..."
+                    onkeydown="return /[A-Za-z ]/.test(event.key) || ['Backspace', 'Delete', 'Tab', 'Enter'].includes(event.key)" 
+                                                minlength="10" maxlength="40" autocomplete="off" required></textarea>
+
+                    <button class="btn btn-outline-primary" type="submit" name="action" value="submit-desc">Submit (-$)</button>
+                </form>
+            </div>
+        </div>
+
+    <!---->
+    {% else %}
+        
+        <div class="description-section" style="max-width: 800px; margin: 1rem auto; padding: 0 1rem;">
+            <div style="background-color: #f5f5dc; padding: 2rem; border-radius: 15px; text-align: center;">
+                <h4 style="margin: 0 0 1rem 0; color: #333;">Description:</h4>
+                <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; color: #555;">
+                    {{ description }}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Guess Section -->
+    {% if status == 'guessable' and not role %}
+
+        <form class="text-panel" method="post">
+            <input type="text" name="guess">
+            <button class="btn btn-primary" type="submit" name="action" value="submit-guess">Confirm my guess</button>
+        </form>
+
+    {% endif %}
+
+    <!-- Past Guess Section -->
+    {% if status == 'concluded' or (role and status == 'guessable') %}
+        <div class="text-panel">
+            <h4>{{ guesses|length }} people have guessed</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>No.</th>
+                    <th>Username</th>
+                    <th>Guess</th>
+                </tr>
+
+                {% for guess in guesses %}
+                    <tr class="{{ 'correct-row' if guess.is_correct else 'incorrect-row' }}">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ guess.username }}</td>
+                        <td>{{ guess.guess_answer }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+    {% if fwords_list %}
+    <script>
+        const forbiddenWordsArray = JSON.parse('{{ fwords_list | tojson | safe }}');
+        console.log('Forbidden words:', forbiddenWordsArray); 
+    </script>
+    {% endif %}
+
+<script src="/static/play_logic.js"></script>
+
+
+
+{% endblock %}
+        

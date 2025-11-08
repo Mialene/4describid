@@ -1,0 +1,603 @@
+/* ==================== RESET & BASE STYLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;  /* Add this */
+    padding: 0; /* Add this */
+}
+
+.main-content {
+    display: flex;
+    background-color: #f8c9df;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    min-height: 100vh;
+    width: 100%
+}
+
+h3 {
+    margin-bottom: 20px;
+}
+
+/* ==================== NAVIGATION BAR ==================== */
+.navbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(250, 119, 140);
+    padding: 0.3rem 1rem;
+    border-bottom: 3px solid #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Left Side: Points Section */
+.points-section {
+    display: flex;
+    align-items: center;
+    background-color: #e8a8e0; /* Cyan background */
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    gap: 0.5rem;
+}
+
+.points-label {
+    font-size: 0.8rem;
+    color: white;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.point-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    min-width: 50px;
+}
+
+/* Individual point type colors */
+.point-xxx { background-color: #feaaf6; } /* Yellow */
+.point-yyy { background-color: #fd7e14; } /* Orange */
+.point-zzz { background-color: #ecfcad; } /* Purple */
+
+.point-type {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+.point-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+/* Center */
+.nav-center {
+    /* flex-grow: 1; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Navigation List */
+.nav-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* this one is the real container */
+    list-style: none;
+    background-color: rgb(250, 119, 140);
+}
+
+.nav-list a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 30px; /* vertically center text in circle button */
+    color: #333;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-list a:hover {
+    background-color: #cbacff;
+}
+
+.nav-list a:active {
+    background-color: #c29adf;
+}
+
+.explore-btn {
+    background-color: #ffa8f3;
+    font-size: 1.3rem !important;
+    font-weight: bold;
+    color: white;
+
+    display: flex;
+    width: 100px;   /* make it fixed width */
+    height: 100px;  /* same as width */
+    border-radius: 50% !important;   /* circle shape */
+    
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 2rem; /* add extra space left & right */
+}
+
+.explore-btn:hover {
+    color: rgb(255, 53, 117);
+}
+
+/* Right Side: Action Tokens & Logout */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.action-tokens {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.token-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #6c757d; /* Gray-blue */
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    min-width: 45px;
+}
+
+.token-type {
+    font-size: 0.7rem;
+    color: white;
+    font-weight: 500;
+}
+
+.token-value {
+    font-size: 0.8rem;
+    color: white;
+    font-weight: bold;
+}
+
+/* Logout Button */
+.logout-btn {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* No session status: login & register buttons */
+.nav-corner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.nav-corner a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-corner a:hover {
+    background-color: #cbacff;
+}
+
+.nav-corner a:active {
+    background-color: #c29adf;
+}
+
+/* ==================== NAV BAR RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .points-section {
+        order: 2;
+    }
+    
+    .nav-center {
+        order: 1;
+        flex-grow: 0;
+    }
+    
+    .nav-right {
+        order: 3;
+    }
+}
+
+/* ==================== PROFILE: DISPLAY YOUR DESCRIBIDS ==================== */
+/* Panel Styling */
+.panels-container {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+}
+
+.panel {
+    background-color: white;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    min-height: 400px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.left-panel-container {
+    height: 400px;
+    overflow-y: scroll;
+    flex: 1; /* Takes up 1/3 of the space */
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.right-panel-container {
+    height: 400px;
+    overflow-y: scroll;
+    flex: 2; /* Takes up 2/3 of the space */
+    flex-direction: column;
+    align-items: center;
+}
+
+.right-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    gap: 2rem;
+}
+
+/* ==================== EXPLORE COMPONENTS ==================== */
+.expl-panel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    /* max-height: 800px; */
+    overflow-y: auto;
+}
+
+.expl-panel {
+    display: none;
+}
+
+.expl-panel.active {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    gap: 2rem;
+    background-color: white;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    min-height: 400px;
+    width: 75%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ==================== PINK RADIO BUTTONS ==================== */
+.btn-outline-pink {
+    --bs-btn-color: #e91e63;
+    --bs-btn-border-color: #e91e63;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #f8bbd9;
+    --bs-btn-hover-border-color: #f8bbd9;
+    --bs-btn-focus-shadow-rgb: 233, 30, 99;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #e91e63;
+    --bs-btn-active-border-color: #e91e63;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #e91e63;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #e91e63;
+    --bs-gradient: none;
+}
+
+/* Style for checked state */
+.btn-check:checked + .btn-outline-pink {
+    color: #fff;
+    background-color: #e91e63;
+    border-color: #e91e63;
+}
+
+/* Additional hover effects */
+.btn-outline-pink:hover {
+    background-color: #f8bbd9 !important;
+    border-color: #f8bbd9 !important;
+    color: #333 !important;
+}
+
+/* Focus state */
+.btn-outline-pink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(233, 30, 99, 0.25);
+}
+
+/* ==================== GREEN RADIO BUTTONS ==================== */
+.btn-outline-green {
+    --bs-btn-color: #1ee94d;
+    --bs-btn-border-color: #1ee94d;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #bbf8bb;
+    --bs-btn-hover-border-color: #bbf8bb;
+    --bs-btn-focus-shadow-rgb: 233, 30, 99;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #1ee94d;
+    --bs-btn-active-border-color: #1ee94d;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #1ee94d;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #1ee94d;
+    --bs-gradient: none;
+}
+
+/* Style for checked state */
+.btn-check:checked + .btn-outline-green {
+    color: #fff;
+    background-color: #1ee94d;
+    border-color: #1ee94d;
+}
+
+/* Additional hover effects */
+.btn-outline-green:hover {
+    background-color: #bbf8bb !important;
+    border-color: #bbf8bb !important;
+    color: #333 !important;
+}
+
+/* Focus state */
+.btn-outline-green:focus {
+    box-shadow: 0 0 0 0.25rem rgba(30, 233, 33, 0.25);
+}
+
+/* ==================== CARD STYLING ==================== */
+.play-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    max-height: 8rem;
+    max-width: 10rem;
+}
+
+.play-card:hover {
+    background-color: #ffbefb;
+}
+
+.play-card:active {
+    background-color: #d394cf;
+}
+
+.play-card-desc {
+    background-color: #89ff95;
+}
+
+.play-card-desc:hover {
+    background-color: #bdf9ad;
+}
+
+/* ==================== PLAY PAGE ==================== */
+.play-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    max-width: 800px; 
+    gap: 5rem;
+}
+
+.view-button {
+    background-color: #17a2b8; 
+    color: white; 
+    padding: 1rem 3rem; 
+    border: none; 
+    border-radius: 50px; 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: #138496;
+}
+
+.view-button:active {
+    background-color: #117a8b;
+}
+
+.keyword-display {
+    background-color: #e91e63; 
+    color: white; 
+    padding: 1rem 3rem; 
+    border-radius: 50px; 
+    font-size: 1.5rem; 
+    font-weight: bold;
+}
+
+.forbidder-bar {
+     display: flex; 
+     align-items: center; 
+     margin-bottom: 2rem;
+}
+
+.forbidder-info {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-right: 2rem; 
+    min-width: 120px;
+}
+
+.user-icon {
+     width: 60px; 
+     height: 60px; 
+     background-color: #ff6b6b; 
+     border-radius: 50%; 
+     display: flex; 
+     align-items: center; 
+     justify-content: center; 
+     margin-bottom: 0.5rem;
+}
+
+.forbidden-bubble {
+     background-color: #ff6b6b; 
+     padding: 1rem; 
+     border-radius: 15px; 
+     flex: 1; 
+     position: relative;
+}
+
+.word-label {
+     flex: 1; 
+     padding: 0.8rem; 
+     background-color: white; 
+     border-radius: 8px; 
+     font-size: 1rem; 
+     text-align: center; 
+     font-weight: bold;
+}
+
+/* forbidden prompt */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal.open {
+    display: flex !important;
+    visibility: visible;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    padding: 2rem;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.text-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#description {
+    min-width: 500px;
+    text-align: center;
+    background-color: #ffcaf1;
+}
+
+.correct-row td
+{
+    color: green;
+}
+
+.incorrect-row td
+{
+    color: red;
+}
+
+/* ==================== History ==================== */
+
+.hist-panel {
+    display: none;
+}
+
+.hist-panel.active {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    gap: 2rem;
+    background-color: white;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    min-height: 400px;
+    width: 75%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ==================== FOOTER ==================== */
+
+         /*   min-height: 100vh; */
+
+
+.footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    margin-top: auto;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.footer .container {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.footer a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.text-center { text-align: center; }
+.mb-1 { margin-bottom: 1rem; }
+.mt-1 { margin-top: 1rem; }
