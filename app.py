@@ -1,9 +1,16 @@
 from cs50 import SQL
 from flask_session import Session
-from flask import Flask, render_template, request, redirect, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, flash, session, jsonify, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
+
 from helpers import login_required, is_username_taken, generate_keyword, validate_word, get_random_noun, check_forbidden_words, has_keyword
 from datetime import datetime
+
+import os
+import resend
 
 app = Flask(__name__)
 
@@ -26,6 +33,7 @@ def inject_points():
 def index():
     print(session)
     if session.get("user_id"):
+        username = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])[0]['username']
         # Fetch user's active describids
         my_describids = db.execute("SELECT * FROM plays WHERE owner = ? AND " \
         "status != 'concluded' ORDER BY status", session["user_id"])
@@ -42,9 +50,70 @@ def index():
             session["user_id"]
         )
 
-        return render_template('index.html', my_describids=my_describids, active_plays=active_plays)
+        return render_template('index.html', username=username, my_describids=my_describids, active_plays=active_plays)
     
     return render_template('index.html')
+
+'''
+experimental
+
+'''
+app.secret_key = 'this_is_a_secret_key'
+# 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'chu.straight@gmail.com'  # your Gmail
+app.config['MAIL_PASSWORD'] = 'cauv eagz wiwf ewl' # เยี่ยมเรย เพื่อนชื่ออะไรพูด? เติมไปท้ายสุด 
+mail = Mail(app)
+s = URLSafeTimedSerializer(app.secret_key)
+
+def generate_confirmation_token(email):
+    return s.dumps(email, salt='email-confirm')
+
+def confirm_token(token, expiration=3600):
+    try:
+        email = s.loads(
+            token,
+            salt='email-confirm', #
+            max_age=expiration
+        )
+    except:
+        return False
+    return email
+
+
+# this is for resend
+resend.api_key = "re_KNCc8nu7_29JNiDxwJGdP2vctcXWaAHLy"
+
+def send_verification_email(email):
+    token = generate_confirmation_token(email)
+    verify_url = url_for('verify_email', token=token, _external=True)
+    html = render_template('activate.html', verify_url=verify_url)
+
+    # here goes nothing
+    try:
+        params: resend.Emails.SendParams = {
+            "from": "4Describid <onboarding@resend.dev>",
+            "to": [email],
+            "subject": '4Describid | Please confirm your email',
+            "html": html
+        }
+
+        email_sent = resend.Emails.send(params)
+        print(f"Email sent: {email_sent.id}")
+
+    except Exception as e:
+        print(f"Error sending email: {e}")
+    """
+    subject = "4Describid | Please confirm your email"
+    msg = Message(subject, 
+                  sender="chu.straight@gmail.com", 
+                  recipients=[email], 
+                  html=html)
+        
+    mail.send(msg)
+    """
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -52,7 +121,7 @@ def register():
     if request.method == 'POST':
         # User did not fill all fields, warns them
         username = request.form.get("username").strip()
-        if not username or not request.form.get("password") or not request.form.get("confirmation"):
+        if not username or not request.form.get("password") or not request.form.get("confirmation") or not request.form.get("email"):
             flash("Please enter all fields.")
             return redirect("register")
 
@@ -60,23 +129,50 @@ def register():
         if is_username_taken(username, db):
             flash("This username is already taken.")
             return redirect("register")
+        
+        # Apology if the email is already taken
+        email = request.form.get("email").strip()
+        rows = db.execute("SELECT email FROM users WHERE LOWER(email) = LOWER(?)", email)
+        if len(rows) > 0:
+            flash("This email is already registered.")
+            return redirect("register")
 
         # Passwords do not match
         if request.form.get("password") != request.form.get("confirmation"):
             flash("Passwords do not match")
             return redirect("register")
-
-        # All conditions met, record user infos into database
+        
+        # record user infos into database for verification
         hash = generate_password_hash(request.form.get("password")) # generate password hash
-        db.execute("INSERT INTO users (username, email, hash) VALUES (?,?,?)", username, "testy@testmail.com", hash)
-
-        #print(hash)
-        flash("You have successfully registered.")
-        return redirect("/login")
+        db.execute("INSERT INTO users (username, email, hash, verified) VALUES (?,?,?,?)", username, email, hash, False)
+        
+        send_verification_email(email)
+        flash("A confirmation email has been sent via email. Please check your inbox.")
+        return redirect("login")
     
     # default access via GET
     return render_template('register.html')
 
+# route for email verification (late or not late)
+@app.route('/verify_email') 
+def verify_email():  # No argument
+    token = request.args.get('token')  # Get it from query string
+    try:
+        email = confirm_token(token)
+    except Exception:
+        flash("The confirmation link is invalid or has expired.", "danger")
+        return redirect('/login')
+    
+    user = db.execute("SELECT * FROM users WHERE email = ?", email)
+    if user and not user[0]['verified']:
+        db.execute("UPDATE users SET verified = ? WHERE email = ?", True, email)
+        flash("You have confirmed your account. Please log in.", "success")
+    elif user and user[0]['verified']:
+        flash("Account already verified. Please log in.", "success")
+    else:
+        flash("Invalid email address. Try registering again", "danger")
+    
+    return redirect('/login')
 
 @app.route("/logout")
 def logout():
@@ -98,11 +194,22 @@ def login():
             return redirect("login")
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE LOWER(username) = LOWER(?)", request.form.get("username"))
+        username = request.form.get("username").strip();
+        rows = db.execute(
+            "SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", 
+            username, username
+        )
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            flash("Invalid username and/or password")
+            flash("Invalid username, email and/or password")
+            return redirect("login")
+        
+        # Ensure user uses a verified email
+        email = rows[0]["email"]
+        if not rows[0]["verified"]:
+            # prompt user to resend verification email
+            flash(f"Please verify your email before logging in. Didn't get it? <a href='/resend_verification?email={email}'>Resend</a>")
             return redirect("login")
 
         # Remember which user has logged in
@@ -114,6 +221,16 @@ def login():
 
     # default access via GET
     return render_template('login.html')
+
+@app.route('/resend_verification')
+def resend_verification():
+    email = request.args.get('email')
+    send_verification_email(email)
+    if not email:
+        flash("Invalid request.")
+        return redirect("login")
+    flash("A confirmation email has been sent via email. Please check your inbox.")
+    return redirect("login")
 
 
 """New Describid page"""

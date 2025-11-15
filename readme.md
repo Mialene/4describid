@@ -80,6 +80,8 @@ All server data are saved in finance.db file which contains 4 tables as per imag
 
 
 ## How It Works
+- I use mailtrap
+- I use wordnik api
 
 
 Create New:

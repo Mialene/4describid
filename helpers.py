@@ -35,8 +35,9 @@ def get_random_noun():
     params = {
         'hasDictionaryDef': 'true',
         'includePartOfSpeech': 'noun',
+        'excludePartOfSpeech': 'proper-noun',
         'minCorpusCount': 7000,      # not too rare
-        'maxCorpusCount': 500000,         # not too common
+        'maxCorpusCount': 120000000,      # not too common
         'minLength': 4,
         'maxLength': 14,        
         'api_key': api_key
@@ -45,7 +46,7 @@ def get_random_noun():
     # Retry up to 3 times
     for attempt in range(3):
         try:
-            response = requests.get(url, params=params, timeout=10)  # Increased timeout
+            response = requests.get(url, params=params, timeout=15)  # Increased timeout
             response.raise_for_status()
             data = response.json()
             word = data.get("word", None)
