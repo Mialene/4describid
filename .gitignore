@@ -26,6 +26,10 @@
    *.db
    *.sqlite
    *.sqlite3
+   4describid.db
+
+   # Flask session
+   flask_session/
 
    # IDE
    .vscode/
