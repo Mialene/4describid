@@ -474,8 +474,8 @@ def play(id):
                     db.execute("UPDATE users_point SET forbid_point = forbid_point + 1 WHERE user_id = ?", forb2_id)
 
 
-            # conclude the play if guessers > 10
-            pp_limit = 1
+            # conclude the play if guessers > 5
+            pp_limit = 5
             if len(db.execute("SELECT * FROM play_participants WHERE play_id = ? AND role = 'guesser'", id)) >= pp_limit:
                 db.execute("UPDATE plays SET status = 'concluded', end_time = ? WHERE id = ?", datetime.now(), id)
                 flash(f"This describid has concluded as it has reached {pp_limit} guessers. Thank you for your participation!")
