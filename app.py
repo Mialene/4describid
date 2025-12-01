@@ -60,12 +60,13 @@ experimental
 '''
 app.secret_key = 'this_is_a_secret_key'
 # 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'chu.straight@gmail.com'  # your Gmail
-app.config['MAIL_PASSWORD'] = 'cauv eagz wiwf ewl' # เยี่ยมเรย เพื่อนชื่ออะไรพูด? เติมไปท้ายสุด 
-mail = Mail(app)
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'chu.straight@gmail.com'  # your Gmail
+# app.config['MAIL_PASSWORD'] = 'cauv eagz wiwf ewl' # เยี่ยมเรย เพื่อนชื่ออะไรพูด? เติมไปท้ายสุด 
+# mail = Mail(app)
+resend.api_key = os.getenv("RESEND_API_KEY")
 s = URLSafeTimedSerializer(app.secret_key)
 
 def generate_confirmation_token(email):
