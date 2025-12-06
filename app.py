@@ -19,6 +19,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+#db = SQL("sqlite:///4describid_backup.db") # (backup for real production)
 db = SQL("sqlite:///4describid.db")
 
 @app.context_processor
@@ -145,10 +146,19 @@ def register():
         
         # record user infos into database for verification
         hash = generate_password_hash(request.form.get("password")) # generate password hash
+
+        # **** for email verification (need paid mail service TT^TT) ****
+        """
         db.execute("INSERT INTO users (username, email, hash, verified) VALUES (?,?,?,?)", username, email, hash, False)
         
         send_verification_email(email)
         flash("A confirmation email has been sent via email. Please check your inbox.")
+        """
+        # ****
+
+        # for no email verification (testing purpose only) ****
+        db.execute("INSERT INTO users (username, email, hash, verified) VALUES (?,?,?,?)", username, email, hash, True)
+        flash("Registered successfully! Please login.")
         return redirect("login")
     
     # default access via GET

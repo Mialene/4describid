@@ -1,5 +1,6 @@
 # 4Describid
 #### Video Demo:  <URL HERE>
+#### URL: https://fourdescribid.onrender.com
 
 
 ## What is 4Describid?
@@ -61,6 +62,8 @@ Go back to your profile, you can rest here and wait for the update. Also, for an
 
 There are 3 types of points. For the describer and guesser, you will get the point if you contribute to increase the number of correct guesses. For the forbidder, you will get point by the number of people who (that you duohandedly cause them to) make a wrong guess.
 
+Please note, anyone who knows the keyword can never be the guesser. Make sure to not click "View the keyword" if you plan to guess a play from a particular user.
+
 
 
 ## Project Structure
@@ -85,21 +88,16 @@ All server data are saved in finance.db file which contains 4 tables as per imag
 ## APIs in the project
 
 - Resend: I use this API for email verification. Upon register, the user will receive an email via their registered email. One account per email to prevent one user from owning too many account.
+For some reason, Hotmail blocks all emails from my web app. Therefore, I recommend register with Gmail if possible.
 - Wordnik: As for the mechanic of random words generator, I rely on Wordnik to get a set of nouns. With their statistics of commonness of English word, I can control the words to not be too common or too rare.
 
 
 
-I have done multiple tests to make sure anyone who knows the keyword can never be the guesser. For good user, some plays will not be shown in some places depending on your role on those plays. For malicious user, my webapp has server side verification and is injection-proof. You are welcome to try those attacks. :)
-
-
-
-## Inspiration
+## Personal Take
 
 I would like to dedicated this space to thank CS50 team.
 For giving me knowledge of basic computer science, especially Flask framework.
 This is my first time ever learning it and I am already be able to build a web app this complex
 while having so much fun.
-    I can pretty much design this project freely with little concern because I feel 
-powerful enough to be able to research any with what CS50 had given.
+    I did make sure to be mindful of anti-hack practice such as, Server-side verification, SQL injection prevention, and hash password. Still, I'm just a guy with no background in security. Please don't input any sensitive information into the database. Especially, if you're gonna register with your real email.
 
-Thank you from the bottom of my heart.

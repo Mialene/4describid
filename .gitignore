@@ -26,7 +26,8 @@
    *.db
    *.sqlite
    *.sqlite3
-   4describid.db
+   !4describid.db
+
 
    # Flask session
    flask_session/
